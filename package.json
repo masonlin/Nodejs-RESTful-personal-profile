@@ -1,0 +1,12 @@
+{
+  "name": "mason_profile",
+  "version": "0.0.1",
+  "main": "mason_profile.js",
+  "dependencies": {
+    "express": "4.13.x"
+  },
+  "engines": {
+    "node": "0.12.7",
+    "npm": "2.11.3"
+  }
+}
