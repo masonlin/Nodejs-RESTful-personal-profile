@@ -10,12 +10,13 @@ var app = require('express')(),
 port = process.env.PORT || 8080,
 users = [
           {name: 'Mason'},   //:id=0
-          {name: 'Stuart'}   //:id=1
+          {name: 'Stuart'},   //:id=1
+          {name: 'Jessica'}   //:id=2
         ];
 app.listen(port);
 
 //app.all('/user/:id/:op?', function(req, res, next){
-app.all('/user/:id/:oo', function(req, res, next){
+app.all('/user/:id', function(req, res, next){
                               req.user = users[req.params.id];
                               if (req.user) {
                                   next();
