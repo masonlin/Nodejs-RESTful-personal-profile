@@ -14,8 +14,10 @@ users = [
           {name: 'Jessica'}   //:id=2
         ];
 app.listen(port);
+var name = "";
 
 //app.all('/user/:id/:op?', function(req, res, next){
+//usage: http://127.0.0.1:8080/user/0
 app.all('/user/:id', function(req, res, next){
                               req.user = users[req.params.id];
                               if (req.user) {
@@ -28,6 +30,16 @@ app.all('/user/:id', function(req, res, next){
 app.get('/user/:id', function(req, res){
                          res.send('viewing ' + req.user.name);
                      });
+
+
+ app.get('/user/:id/*', function(req, res, next){
+                               req.user = users[req.params.id];
+                               if (req.user) {
+                                   next();
+                               } else {
+                                   next(new Error('cannot find user ' + req.params.id));
+                               }
+                           });
 
 app.get('/user/:id/edit', function(req, res){
                               res.send('editing ' + req.user.name);
