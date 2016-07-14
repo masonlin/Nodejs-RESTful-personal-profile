@@ -2,18 +2,23 @@
 * @overview
 *
 * @author Mason Lin
-* @version V1.0.1 2015/09/09
+* @version v1.0.1 2015/09/09
+*          v1.1.0 2016/07/12 add socket.io
+*          v1.2.0 2016/07/13 add postgreSQL
 */
 // create server.
 //var app = require('express').createServer(),
-var app = require('express')(),
-port = process.env.PORT || 8080,
+var app = require('express')();
+port = process.env.PORT || 8080;
 users = [
-          {name: 'Mason'},   //:id=0
-          {name: 'Stuart'},   //:id=1
-          {name: 'Jessica'}   //:id=2
+          {name: 'Mason Lin'},   //:id=0
+          {name: 'Stuart Lin'},   //:id=1
+          {name: 'Jessica Lin'}   //:id=2
         ];
 app.listen(port);
+
+
+
 
 //>>>>>>>>>> http get + routes >>>>>>>>>>
 //app.all('/user/:id/:op?', function(req, res, next){
@@ -27,8 +32,21 @@ app.all('/user/:id', function(req, res, next){
                               }
                           });
 
+
+app.get('/profile/:id', function(req, res){
+                        var clsPG = require('./mason_modules/profilePg');
+                        res.set({'Access-Control-Allow-Origin': '*'});
+                        var oPG = new clsPG(res, req.params.id);
+                        oPG.getData();
+
+                     });
+
 app.get('/user/:id', function(req, res){
-                         res.send('viewing ' + req.user.name);
+                         res.set({'Access-Control-Allow-Origin': '*'});
+                         //res.send('viewing ' + req.user.name);
+                         //res.send(req.user.name);
+                         //res.send(JSON.stringify({name:req.user.name}));
+                         res.json({name:req.user.name});
                      });
 
 
@@ -83,3 +101,31 @@ app.post('/post_test', function(req, res, next){
 
 
 console.log('start express server\n');
+
+
+
+//>>>>>>>>>> new socket.io >>>>>>>>>>
+var server = require('http').createServer(app);
+var io = require('socket.io')(server,{origins: 'localhost:* 127.0.0.1:* http://localhost:* http://127.0.0.1:* http://192.168.*.*:*',
+                                          log: true,
+                                  'log level': 3});
+server.listen('8081', function(){
+  console.log("Socket server up and running...");
+
+});
+
+io.sockets.on('connection', function(socket){
+  //console.log('connection....');
+
+  //socket.emit('clientReceiveMsg', JSON.stringify({time: 'test'}));
+  setInterval(function(){
+    var date = new Date();
+    //socket.emit('clientReceiveMsg',JSON.stringify({'date': date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds()}));
+    socket.broadcast.emit('clientReceiveMsg',JSON.stringify({'time': date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '.' + date.getMilliseconds()}));
+  }, 100);
+
+  socket.on('serverReceiveMsg', function(data){
+    console.log('server receive data');
+  });
+});
+//<<<<<<<<<< new socket.io <<<<<<<<<<
