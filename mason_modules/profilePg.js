@@ -19,7 +19,7 @@ var ClsPG = function(res, profileId){
   if(oMasonConf.isDev == true){
     this.conStr = process.env.DATABASE_URL || 'Postgres://postgres:aabbcc11@localhost:5432/profiledb';
   }else{
-    this.conStr = process.env.DATABASE_URL || 'postgres://uhiovunxefljkw:NOBbE94z3FQq0IliteWmz9Xg2V@ec2-54-163-228-0.compute-1.amazonaws.com:5432/dj6thr6fi7vmc';
+    this.conStr = process.env.DATABASE_URL;
     pg.defaults.ssl = true;  //heroku SSL
   }
 
