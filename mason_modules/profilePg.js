@@ -4,6 +4,7 @@
 * @author Mason Lin
 * @version v1.0.0 2016/07/13 Original
 *          v1.1.0 2016/07/21 modify for pre-release
+*          v1.2.0 2016/07/29 modify return value
 */
 
 var pg = require('pg');
@@ -19,7 +20,7 @@ var ClsPG = function(res, profileId){
   if(oMasonConf.isDev == true){
     this.conStr = process.env.DATABASE_URL || 'Postgres://postgres:aabbcc11@localhost:5432/profiledb';
   }else{
-    this.conStr = process.env.DATABASE_URL;
+    this.conStr = process.env.DATABASE_URL || 'postgres://uhiovunxefljkw:NOBbE94z3FQq0IliteWmz9Xg2V@ec2-54-163-228-0.compute-1.amazonaws.com:5432/dj6thr6fi7vmc';
     pg.defaults.ssl = true;  //heroku SSL
   }
 
@@ -48,10 +49,7 @@ var ClsPG = function(res, profileId){
 
         query.on('end',function(result){
           done();
-          //console.log(JSON.stringify(result.rows, null, "    "));
-          //return JSON.stringify(result.rows, null, "    ");
-          //res.json(result);       //information include all data
-          res.json(result.rows);
+          res.json(result.rows[0]);
         });
 
       });
